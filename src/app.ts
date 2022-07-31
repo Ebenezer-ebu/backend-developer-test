@@ -4,7 +4,8 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 
-import indexRouter from "./routes/index";
+import teamRouter from "./routes/team";
+import fixtureRouter from "./routes/fixtures";
 import usersRouter from "./routes/users";
 
 const app = express();
@@ -19,7 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
+app.use("/", teamRouter);
+app.use("/", fixtureRouter);
 app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler

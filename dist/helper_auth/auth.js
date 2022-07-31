@@ -12,31 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateToken = exports.checkUserPassword = exports.hashPassword = void 0;
+exports.verifyToken = exports.generateToken = exports.checkUserPassword = exports.hashPassword = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+;
 const secretKey = process.env.SECRET_KEY;
 const saltRounds = process.env.SALT;
-function hashPassword(password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const hash = yield bcrypt_1.default.hash(password, Number(saltRounds));
-        return hash;
-    });
-}
+const hashPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
+    const hash = yield bcrypt_1.default.hash(password, Number(saltRounds));
+    return hash;
+});
 exports.hashPassword = hashPassword;
-function checkUserPassword(password, hashedPassword) {
-    return __awaiter(this, void 0, void 0, function* () {
-        //... fetch user from a db etc.
-        const match = yield bcrypt_1.default.compare(password, hashedPassword);
-        if (match) {
-            //login
-            return true;
-        }
-        else {
-            return false;
-        }
-    });
-}
+const checkUserPassword = (password, hashedPassword) => __awaiter(void 0, void 0, void 0, function* () {
+    const match = yield bcrypt_1.default.compare(password, hashedPassword);
+    if (match) {
+        return true;
+    }
+    else {
+        return false;
+    }
+});
 exports.checkUserPassword = checkUserPassword;
 const generateToken = (payload, secret) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -48,13 +43,13 @@ const generateToken = (payload, secret) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.generateToken = generateToken;
-// const verifyToken = async (token, secret = secretKey) => {
-//   const decoded = await jwt.verify(token, secret);
-//   return decoded;
-// };
-module.exports = {
-    hashPassword,
-    checkUserPassword,
-    //   generateToken,
-    //   verifyToken,
-};
+const verifyToken = (token, secret) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const decoded = yield jsonwebtoken_1.default.verify(token, secret);
+        return decoded;
+    }
+    catch (err) {
+        return null;
+    }
+});
+exports.verifyToken = verifyToken;

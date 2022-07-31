@@ -3,11 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Team = void 0;
+exports.Link = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const teamSchema = new mongoose_1.default.Schema({
-    team: { type: String, required: true, unique: true },
-    coach: { type: String, required: true },
-    players: { type: [String], required: true },
+const matchLinkSchema = new mongoose_1.default.Schema({
+    link: { type: String, required: true, unique: true },
+    fixture: { type: mongoose_1.default.Types.ObjectId, required: true, ref: "match" },
 }, { timestamps: true });
-exports.Team = mongoose_1.default.model("team", teamSchema);
+exports.Link = mongoose_1.default.model("link", matchLinkSchema);
