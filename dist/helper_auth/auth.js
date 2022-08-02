@@ -16,7 +16,6 @@ exports.verifyToken = exports.generateToken = exports.checkUserPassword = export
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 ;
-const secretKey = process.env.SECRET_KEY;
 const saltRounds = process.env.SALT;
 const hashPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
     const hash = yield bcrypt_1.default.hash(password, Number(saltRounds));

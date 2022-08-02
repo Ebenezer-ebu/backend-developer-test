@@ -8,4 +8,4 @@ const matchLinkSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Link = mongoose.model("link", matchLinkSchema);
+export const Link = mongoose.models.link || mongoose.model("link", matchLinkSchema);

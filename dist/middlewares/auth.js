@@ -11,23 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isUser = exports.isAdmin = void 0;
 const auth_1 = require("../helper_auth/auth");
-const secretKey = process.env.SECRET_KEY;
 const isAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.headers.authorization.split(" ")[1];
         if (!token) {
             throw new Error("No token");
         }
-        const decoded = (yield (0, auth_1.verifyToken)(token, secretKey));
-        if (decoded.isAdmin) {
-            next();
-            return;
+        const decoded = (yield (0, auth_1.verifyToken)(token, process.env.SECRET_KEY));
+        if (!decoded.isAdmin) {
+            throw "You are not authorized to view this";
         }
-        throw new Error("You are not authorized to view this");
+        next();
     }
     catch (err) {
         return res.status(401).json({
-            message: "Invalid or expired token provided!",
+            message: "No token or Invalid / expired token provided!",
             error: err,
         });
     }
@@ -39,12 +37,12 @@ const isUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         if (!token) {
             throw new Error("No token");
         }
-        const decoded = (yield (0, auth_1.verifyToken)(token, secretKey));
+        const decoded = (yield (0, auth_1.verifyToken)(token, process.env.SECRET_KEY));
         if (decoded) {
             next();
             return;
         }
-        throw new Error("You are not a user to view this");
+        throw "You are not a user to view this";
     }
     catch (err) {
         return res.status(401).json({

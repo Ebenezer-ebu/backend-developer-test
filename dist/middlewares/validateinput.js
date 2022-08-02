@@ -32,7 +32,6 @@ const validateCreateUser = (req, res, next) => __awaiter(void 0, void 0, void 0,
             email,
             password,
         });
-        console.log(value);
         next();
     }
     catch (err) {
@@ -70,8 +69,8 @@ exports.validateLoginUser = validateLoginUser;
 const validateCreateTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { team, coach, players } = req.body;
     const schema = joi_1.default.object({
-        team: joi_1.default.string().alphanum().min(3).max(30).required(),
-        couch: joi_1.default.string().alphanum().min(3).max(30).required(),
+        team: joi_1.default.string().min(3).max(30).required(),
+        coach: joi_1.default.string().min(3).max(30).required(),
         players: joi_1.default.array().items(joi_1.default.string().alphanum().trim(true)).required(),
     });
     try {
@@ -93,8 +92,8 @@ exports.validateCreateTeam = validateCreateTeam;
 const validateEditTeam = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { team, coach, players } = req.body;
     const schema = joi_1.default.object({
-        team: joi_1.default.string().alphanum().min(3).max(30),
-        couch: joi_1.default.string().alphanum().min(3).max(30),
+        team: joi_1.default.string().min(3).max(30),
+        coach: joi_1.default.string().min(3).max(30),
         players: joi_1.default.array().items(joi_1.default.string().alphanum().trim(true)),
     });
     try {
@@ -116,10 +115,10 @@ exports.validateEditTeam = validateEditTeam;
 const validateEditFixtures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { home_score, away_score, home_scorers, away_scorers } = req.body;
     const schema = joi_1.default.object({
-        home_score: joi_1.default.string().alphanum().min(3).max(30).required(),
-        away_score: joi_1.default.string().alphanum().min(3).max(30).required(),
-        home_scorers: joi_1.default.array().items(joi_1.default.string().alphanum().trim(true)),
-        away_scorers: joi_1.default.array().items(joi_1.default.string().alphanum().trim(true)),
+        home_score: joi_1.default.number().required(),
+        away_score: joi_1.default.number().required(),
+        home_scorers: joi_1.default.array().items(joi_1.default.string().trim(true)),
+        away_scorers: joi_1.default.array().items(joi_1.default.string().trim(true)),
     });
     try {
         const value = yield schema.validateAsync({
@@ -128,6 +127,12 @@ const validateEditFixtures = (req, res, next) => __awaiter(void 0, void 0, void 
             home_scorers,
             away_scorers,
         });
+        if (home_scorers.length !== home_score ||
+            away_scorers.length !== away_score) {
+            return res.status(400).json({
+                message: "Number of goals scored don't tally with number players that scored",
+            });
+        }
         if (value) {
             next();
         }
@@ -141,8 +146,8 @@ exports.validateEditFixtures = validateEditFixtures;
 const validateCreateFixtures = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { home, away } = req.body;
     const schema = joi_1.default.object({
-        home: joi_1.default.string().alphanum().min(3).max(30).required(),
-        away: joi_1.default.string().alphanum().min(3).max(30).required(),
+        home: joi_1.default.string().min(3).max(30).required(),
+        away: joi_1.default.string().min(3).max(30).required(),
     });
     try {
         const value = yield schema.validateAsync({

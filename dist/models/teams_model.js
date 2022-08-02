@@ -10,4 +10,4 @@ const teamSchema = new mongoose_1.default.Schema({
     coach: { type: String, required: true },
     players: { type: [String], required: true },
 }, { timestamps: true });
-exports.Team = mongoose_1.default.model("team", teamSchema);
+exports.Team = mongoose_1.default.models.team || mongoose_1.default.model("team", teamSchema);

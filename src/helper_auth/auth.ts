@@ -8,7 +8,6 @@ export interface Payload {
   isAdmin: boolean;
 };
 
-const secretKey = process.env.SECRET_KEY;
 const saltRounds = process.env.SALT;
 
 export const hashPassword = async (password: string) => {

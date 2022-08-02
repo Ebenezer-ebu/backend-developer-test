@@ -11,4 +11,4 @@ const userSchema = new mongoose_1.default.Schema({
     password: { type: String, required: true },
     isAdmin: { type: Boolean, required: true, default: false },
 }, { timestamps: true });
-exports.User = mongoose_1.default.model("user", userSchema);
+exports.User = mongoose_1.default.models.user || mongoose_1.default.model("user", userSchema);

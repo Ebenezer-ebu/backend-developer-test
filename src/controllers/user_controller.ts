@@ -59,14 +59,21 @@ export const createUser = async (req: Request, res: Response) => {
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne(email);
+    const user = await User.findOne({ email });
     if (user) {
       const validPassword = await checkUserPassword(password, user.password);
       if (!validPassword) {
         return res.status(400).json({ message: "Invalid credentials" });
       }
       const { _id, email, isAdmin } = user;
-      const token = await generateToken({ _id, email, isAdmin }, secretKey!);
+      const token = await generateToken(
+        { _id, email, isAdmin },
+        process.env.SECRET_KEY!
+      );
+
+      // Store it on session object
+      req.session.user = { id: _id, email, isAdmin };
+
       return res.status(200).json({
         message: "Login successful",
         token,

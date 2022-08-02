@@ -29,7 +29,6 @@ export const validateCreateUser = async (
       email,
       password,
     });
-    console.log(value);
     next();
   } catch (err) {
     let error = err.details[0].message.replace(/"/g, "");
@@ -74,8 +73,8 @@ export const validateCreateTeam = async (
 ) => {
   const { team, coach, players } = req.body;
   const schema = Joi.object({
-    team: Joi.string().alphanum().min(3).max(30).required(),
-    couch: Joi.string().alphanum().min(3).max(30).required(),
+    team: Joi.string().min(3).max(30).required(),
+    coach: Joi.string().min(3).max(30).required(),
     players: Joi.array().items(Joi.string().alphanum().trim(true)).required(),
   });
 
@@ -101,8 +100,8 @@ export const validateEditTeam = async (
 ) => {
   const { team, coach, players } = req.body;
   const schema = Joi.object({
-    team: Joi.string().alphanum().min(3).max(30),
-    couch: Joi.string().alphanum().min(3).max(30),
+    team: Joi.string().min(3).max(30),
+    coach: Joi.string().min(3).max(30),
     players: Joi.array().items(Joi.string().alphanum().trim(true)),
   });
 
@@ -128,10 +127,10 @@ export const validateEditFixtures = async (
 ) => {
   const { home_score, away_score, home_scorers, away_scorers } = req.body;
   const schema = Joi.object({
-    home_score: Joi.string().alphanum().min(3).max(30).required(),
-    away_score: Joi.string().alphanum().min(3).max(30).required(),
-    home_scorers: Joi.array().items(Joi.string().alphanum().trim(true)),
-    away_scorers: Joi.array().items(Joi.string().alphanum().trim(true)),
+    home_score: Joi.number().required(),
+    away_score: Joi.number().required(),
+    home_scorers: Joi.array().items(Joi.string().trim(true)),
+    away_scorers: Joi.array().items(Joi.string().trim(true)),
   });
 
   try {
@@ -141,6 +140,15 @@ export const validateEditFixtures = async (
       home_scorers,
       away_scorers,
     });
+    if (
+      home_scorers.length !== home_score ||
+      away_scorers.length !== away_score
+    ) {
+      return res.status(400).json({
+        message:
+          "Number of goals scored don't tally with number players that scored",
+      });
+    }
     if (value) {
       next();
     }
@@ -157,8 +165,8 @@ export const validateCreateFixtures = async (
 ) => {
   const { home, away } = req.body;
   const schema = Joi.object({
-    home: Joi.string().alphanum().min(3).max(30).required(),
-    away: Joi.string().alphanum().min(3).max(30).required(),
+    home: Joi.string().min(3).max(30).required(),
+    away: Joi.string().min(3).max(30).required(),
   });
 
   try {

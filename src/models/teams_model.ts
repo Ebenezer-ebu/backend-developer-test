@@ -9,4 +9,4 @@ const teamSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Team = mongoose.model("team", teamSchema);
+export const Team = mongoose.models.team || mongoose.model("team", teamSchema);
